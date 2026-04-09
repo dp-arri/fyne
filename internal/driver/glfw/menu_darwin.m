@@ -125,7 +125,9 @@ const void* insertDarwinMenuItem(const void* m, const char* label, const char* k
     } else {
         [menu addItem:item];
     }
-    [item release]; // retained by the menu
+    if (!isSeparator) {
+        [item release]; // retained by the menu; separators are not alloc'd so must not be released
+    }
     return item;
 }
 
