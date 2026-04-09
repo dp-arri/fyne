@@ -1738,3 +1738,7 @@ func (c *clip) DragEnd() {
 func (c *clip) Dragged(e *fyne.DragEvent) {
 	c.t.Dragged(e)
 }
+
+func (c *clip) Scrolled(ev *fyne.ScrollEvent) {
+	c.t.content.Scrolled(ev)
+}
