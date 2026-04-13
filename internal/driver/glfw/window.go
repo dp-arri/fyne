@@ -39,6 +39,18 @@ func (w *window) SetTitle(title string) {
 }
 
 func (w *window) FullScreen() bool {
+	// Prefer the OS state if the viewport is alive: on macOS the user can
+	// enter or leave native fullscreen via the window's green traffic light,
+	// which bypasses SetFullScreen and would leave w.fullScreen out of sync.
+	// We read w.viewport directly rather than through view() because view()
+	// short-circuits to nil once w.closing is set, which happens before the
+	// GLFW window is actually destroyed - callers that run during teardown
+	// (a final save from OnExitedForeground, for example) still need the
+	// real state. Mirror the observed value into w.fullScreen so the ultimate
+	// teardown fallback returns the last-known real value.
+	if w.viewport != nil {
+		w.fullScreen = w.isNativeFullScreen()
+	}
 	return w.fullScreen
 }
 

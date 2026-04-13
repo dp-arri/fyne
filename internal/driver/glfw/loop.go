@@ -187,6 +187,15 @@ func (d *gLDriver) runGL() {
 
 func (d *gLDriver) destroyWindow(w *window, index int) {
 	w.visible = false
+	// Snapshot the native fullscreen state into w.fullScreen before the GLFW
+	// window is destroyed. After viewport.Destroy() the underlying NSWindow
+	// is gone and isNativeFullScreen() can no longer query it - but
+	// w.destroy(d) below may run d.Quit(), which fires OnExitedForeground;
+	// callers that save state from that hook need FullScreen() to still
+	// return the correct value.
+	if w.viewport != nil {
+		w.fullScreen = w.isNativeFullScreen()
+	}
 	w.viewport.Destroy()
 	w.destroy(d)
 

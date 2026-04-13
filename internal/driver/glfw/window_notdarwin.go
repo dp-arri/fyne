@@ -6,6 +6,13 @@ import "time"
 
 const desktopDefaultDoubleTapDelay = 300 * time.Millisecond
 
+// isNativeFullScreen returns the window's fullscreen state. On non-darwin
+// platforms GLFW manages fullscreen via SetMonitor, so Fyne's w.fullScreen
+// flag stays in sync with reality and can be returned directly.
+func (w *window) isNativeFullScreen() bool {
+	return w.fullScreen
+}
+
 func (w *window) doSetFullScreen(full bool) {
 	monitor := w.getMonitorForWindow()
 	mode := monitor.GetVideoMode()

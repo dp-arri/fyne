@@ -9,6 +9,7 @@ package glfw
 #import <stdbool.h>
 
 void setFullScreen(bool full, void *window);
+bool isFullScreen(void *window);
 */
 import "C"
 
@@ -36,4 +37,24 @@ func (w *window) doSetFullScreen(full bool) {
 		C.setFullScreen(C.bool(full), win)
 		return
 	}
+}
+
+// isNativeFullScreen returns the NSWindow's current fullscreen state,
+// which may diverge from w.fullScreen if the user toggled fullscreen via
+// the macOS window controls rather than via Window.SetFullScreen.
+//
+// We read w.viewport directly instead of going through view() because view()
+// returns nil once w.closing is set, which happens before the GLFW window is
+// actually destroyed. Callers that run during teardown (a final save from
+// OnExitedForeground, for example) still need the real state at that moment;
+// the underlying NSWindow remains valid until glfw.Terminate() tears it down.
+func (w *window) isNativeFullScreen() bool {
+	if w.viewport == nil {
+		return w.fullScreen
+	}
+	win := w.viewport.GetCocoaWindow()
+	if win == nil {
+		return w.fullScreen
+	}
+	return bool(C.isFullScreen(win))
 }
