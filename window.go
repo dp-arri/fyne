@@ -35,6 +35,18 @@ type Window interface {
 	// the Window object is currently positioned on.
 	CenterOnScreen()
 
+	// Position returns the window's top-left corner in screen coordinates
+	// (pixels). The coordinates span all connected monitors: a negative
+	// or large value is valid when the window lives on a secondary display.
+	// Not all drivers support window positioning; such drivers return (0, 0).
+	Position() (int, int)
+
+	// SetPosition moves the window's top-left corner to the given screen
+	// coordinates (pixels). May be called before [Window.Show], in which
+	// case the requested position is applied when the window is first shown.
+	// On drivers without positioning support this is a no-op.
+	SetPosition(x, y int)
+
 	// Padded, normally true, states whether the window should have inner
 	// padding so that components do not touch the window edge.
 	Padded() bool

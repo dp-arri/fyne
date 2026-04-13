@@ -59,6 +59,14 @@ func (w *window) CenterOnScreen() {
 	// no-op
 }
 
+func (w *window) Position() (int, int) {
+	return 0, 0
+}
+
+func (w *window) SetPosition(_, _ int) {
+	// no-op
+}
+
 func (w *window) Padded() bool {
 	return w.canvas.padded
 }

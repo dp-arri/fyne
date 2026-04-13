@@ -136,6 +136,25 @@ func (w *window) CenterOnScreen() {
 	w.runOnMainWhenCreated(w.doCenterOnScreen)
 }
 
+func (w *window) Position() (int, int) {
+	return w.xpos, w.ypos
+}
+
+func (w *window) SetPosition(x, y int) {
+	if build.IsWayland {
+		return
+	}
+
+	// A requested position overrides any prior centering request so that
+	// Show() doesn't reset the window to the middle of its monitor.
+	w.centered = false
+	w.xpos, w.ypos = x, y
+
+	w.runOnMainWhenCreated(func() {
+		w.viewport.SetPos(x, y)
+	})
+}
+
 func (w *window) SetOnDropped(dropped func(pos fyne.Position, items []fyne.URI)) {
 	w.runOnMainWhenCreated(func() {
 		w.viewport.SetDropCallback(func(win *glfw.Window, names []string) {

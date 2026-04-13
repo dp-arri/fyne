@@ -101,6 +101,15 @@ func (w *window) CenterOnScreen() {
 	w.centered = true
 }
 
+func (w *window) Position() (int, int) {
+	return w.xpos, w.ypos
+}
+
+func (w *window) SetPosition(x, y int) {
+	// FIXME: no meaning for window positioning in WebGL
+	w.xpos, w.ypos = x, y
+}
+
 func (w *window) SetOnDropped(dropped func(pos fyne.Position, items []fyne.URI)) {
 	// FIXME: not implemented yet
 }

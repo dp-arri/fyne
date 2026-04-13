@@ -43,6 +43,12 @@ func (w *noosWindow) SetFixedSize(bool) {}
 
 func (w *noosWindow) CenterOnScreen() {}
 
+func (w *noosWindow) Position() (int, int) {
+	return 0, 0
+}
+
+func (w *noosWindow) SetPosition(_, _ int) {}
+
 func (w *noosWindow) Padded() bool {
 	return w.c.Padded()
 }
